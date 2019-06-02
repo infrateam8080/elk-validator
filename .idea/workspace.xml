@@ -4,8 +4,6 @@
     <list default="true" id="83f18be5-5ef5-4cd7-ba37-aecab650817d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/validator/es_duplicates_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/validator/es_duplicates_handler.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/validator/es_logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/validator/es_logger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/validator/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/validator/utils.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,8 +21,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/validator/es_duplicates_handler.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="782">
-              <caret line="186" column="11" selection-start-line="186" selection-start-column="11" selection-end-line="186" selection-end-column="11" />
+            <state relative-caret-position="748">
+              <caret line="180" column="11" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="11" />
               <folding>
                 <element signature="e#76#113#0" expanded="true" />
               </folding>
@@ -235,8 +233,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/validator/es_duplicates_handler.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="186" column="11" selection-start-line="186" selection-start-column="11" selection-end-line="186" selection-end-column="11" />
+        <state relative-caret-position="748">
+          <caret line="180" column="11" selection-start-line="180" selection-start-column="11" selection-end-line="180" selection-end-column="11" />
           <folding>
             <element signature="e#76#113#0" expanded="true" />
           </folding>

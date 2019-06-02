@@ -176,7 +176,24 @@ class ESDuplicateHandler(elasticsearch.Elasticsearch):
         all duplicate documents.
         :param index_name: Index name to delete docs in.
         """
-        pass
+        # Search trough the hash of doc values to see if any
+        # duplicate hashes have bee found
+        for hashval, array_of_ids in self.dict_of_duplicate_docs.items():
+            if len(array_of_ids) > 1:
+                # Get the document that have mapped to the current hashval
+                matching_docs = self.mget(index=index_name, doc_type="doc", body={"ids": array_of_ids})
+
+                # Remove the first doc (the one to keep)
+                # Delete all the others
+                all_docs = matching_docs['docs']
+                docs_to_delete = matching_docs['docs'][1:]
+
+                for doc in docs_to_delete:
+                    # delete doc
+                    try:
+                        self.delete(index=index_name, doc_type="doc", id=str(doc['_id']))
+                    except elasticsearch.exceptions.NotFoundError:
+                        self.es_logger.error("Failed to delete 1 doc")
 
     def _get_docs(self, index_name):
         """
@@ -184,7 +201,25 @@ class ESDuplicateHandler(elasticsearch.Elasticsearch):
         :param index_name: Index name to return its docs
         :return: List of log messages as raw log messages.
         """
-        pass
+        es_raw_logs = []
+
+        data = self.search(index=index_name, scroll='1m', body={"query": {"match_all": {}}})
+        sid = data['_scroll_id']
+        scroll_size = len(data['hits']['hits'])
+
+        while scroll_size > 0:
+            data = self.scroll(scroll_id=sid, scroll='2m')
+
+            # Get the number of results that returned in the Last scroll
+            for hit in data['hits']['hits']:
+                msg = MSG_FORMAT % hit["_source"]
+                es_raw_logs.append(msg)
+
+            # Update the scroll ID
+            sid = data['_scroll_id']
+            scroll_size = len(data['hits']['hits'])
+
+        return es_raw_logs
 
 
 
