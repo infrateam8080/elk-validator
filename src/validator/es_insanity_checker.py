@@ -254,5 +254,109 @@ class LogsDiff(object):
     """
     Logs diff object, has a name and a list of log lines.
     """
-    pass
+    def __init__(self, diff_name, log_lines, output_dir):
+        """
+        Initiates LogsDiff object.
+        :param diff_name: A name for the LogsDiff object.
+        :param log_lines: List that contains the lines of the diff.
+        :param output_dir: Output dif to write diff to.
+        """
+        self.diff_name = diff_name
+        self.log_lines = log_lines
+        self.output_dir = output_dir
 
+
+class DiffSerializer(object):
+    """
+    Diff object serializer, provides an interface
+    for several output serializers, utilizes the Factory Design pattern.
+    """
+    def __init__(self, diff, output_format, output_dir=None, logger_path=None):
+        """
+        Initiates serializer.
+        :param diff: Diff object contains the output lines.
+        :param output_format: Output format string, for now only FILE format is supported.
+        :param output_dir: Output dir's for path.
+        :param logger_path: Path to logger output file.
+        """
+        # Create new ESLogger
+        if logger_path:
+            log_instance = ESLogger(name=__name__, filename=logger_path)
+        else:
+            log_instance = ESLogger(name=__name__)
+
+        self.es_logger = log_instance.get_es_logger()
+        self.diff = diff
+        self.output_format = output_format
+        self.output_dir = output_dir
+
+    def serialize(self):
+        """
+        Serializes the output according to the output format.
+        """
+        serializer = self._get_serializer(self.output_format)
+        serializer(self.diff)
+
+    def _get_serializer(self, output_format):
+        """
+        Returns a serializer function for each output_format.
+        Output format can be FILE, TEMPFILE or STDOUT
+        :param output_format:
+        :return: Serializer function callback.
+        """
+        if output_format == 'FILE':
+            return self._serialze_to
+        elif output_format == 'TEMPFILE':
+            return self._serialize_to_tempfile
+        elif output_format == 'STDOUT':
+            return self._serialize_to_stdout
+        else:
+            raise ValueError("Format {} is not supported".format(output_format))
+
+    def _serialize_to_file(self, diff):
+        """
+        Generate output diff file to path, create output dirs and diff file.
+        :param diff: diff object to write to file.
+        """
+        self._create_index_dir(self.diff.diff_name)
+        diff_path = os.path.join(self.output_dir, self.diff.diff_name, DIFF_FILE)
+        utils.write_list_to_file(self.diff.log_lines, diff_path)
+
+    def _serialize_to_tempfile(self, diff):
+        """
+
+        :param diff:
+        :return:
+        """
+        pass
+
+    def _serialize_to_stdout(self, diff):
+        """
+
+        :param diff:
+        :return:
+        """
+        pass
+
+    def _write_diff_file(self):
+        """
+        :return:
+        """
+        pass
+
+    def _create_index_dir(self, diff_name):
+        """
+        Create a new directory for the given index.
+        :param diff_name: The diff file name, as a string.
+        """
+        dir_path = os.path.join(self.output_dir, diff_name)
+        if not os.path.isdir(dir_path):
+            self.es_logger.debug(
+                "Creating directory for index {0} in path: {1}".format(diff_name, dir_path))
+            try:
+                os.makedirs(dir_path)
+            except OSError as e:
+                self.es_logger.error("Failed to create dir {0}. Error: {1}".format(e))
+        else:
+            self.es_logger.warning(
+                "Failed to create directory {0}, path already exists.".format(dir_path))
