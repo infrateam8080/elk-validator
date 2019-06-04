@@ -1,0 +1,13 @@
+version: "3"
+services:
+  es_insanity_check:
+    image: elk_validator:0.1.0
+    volumes:
+      # Here config your logs dir (logs to compare data to)
+      - ./logs:/logs
+      - ./output:/output
+      - ./res:/res
+      - ./app_logs:/app_logs
+      - ./src/modules:/proj
+      - ./src/config:/config_dir
+    command: python /proj/main.py -c /config_dir/validator.yaml

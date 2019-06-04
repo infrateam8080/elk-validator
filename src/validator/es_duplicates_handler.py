@@ -16,7 +16,7 @@ import utils
 MSG_FORMAT = "%(message)s\n"
 
 
-class ESDuplicateHandler(elasticsearch.Elasticsearch):
+class ESDuplicatesHandler(elasticsearch.Elasticsearch):
     """
     Search and delete duplicate documents in an elasticsearch cluster
     """
